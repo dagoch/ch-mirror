@@ -1,0 +1,152 @@
+/*
+  Styles for weatherart demo.
+
+  (Some of this CSS is borrowed from http://http://simpleweatherjs.com)
+
+*/
+
+body {
+  padding: 45px 25px;
+  font: 13px 'Open Sans', "Helvetica Neue", Helvetica, Arial, "Lucida Grande", sans-serif;
+  background: #bbc8c9; /* #D1edef; /* #bff; /* #b4daff; #1192d3; */
+}
+
+@font-face {
+    font-family: 'weather';
+    src: url('https://dl.dropboxusercontent.com/u/2086809/weatherfont/artill_clean_icons-webfont.eot');
+    src: url('https://dl.dropboxusercontent.com/u/2086809/weatherfont/artill_clean_icons-webfont.eot?#iefix') format('embedded-opentype'),
+         url('https://dl.dropboxusercontent.com/u/2086809/weatherfont/artill_clean_icons-webfont.woff') format('woff'),
+         url('https://dl.dropboxusercontent.com/u/2086809/weatherfont/artill_clean_icons-webfont.ttf') format('truetype'),
+         url('https://dl.dropboxusercontent.com/u/2086809/weatherfont/artill_clean_icons-webfont.svg#artill_clean_weather_iconsRg') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+#art {
+  width: 94%;
+  height: 94%;
+  margin: 0px auto;
+  /* border: 2px solid #FFF;*/
+  background-repeat: no-repeat;
+  background-position: top center;
+  background-size: 100%;
+}
+
+#weather {
+  width: 70%;
+  margin: 0px auto;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+#allfields, #ch_output {
+  width: 70%;
+  margin: 10px auto;
+  text-align: center;
+}
+#allfields ul {
+  margin: 0;
+  padding: 0;
+}
+#allfields li {
+  background: #fff;
+}
+#ch_output {
+  background: transparent;
+}
+
+#heading {
+  margin: 10px auto;
+  text-align: center;
+  width: 70%;
+}
+
+#weather h2 {
+  margin: 0 0 8px;
+  color: #fff;
+  font-size: 70px;
+  font-weight: 300;
+  text-align: center;
+  text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+}
+
+#weather ul {
+  margin: 0;
+  padding: 0;
+}
+
+#weather li {
+
+  background: #fff;
+  background: rgba(255,255,255,0.70);
+  padding: 12px;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+#weather .currently {
+  margin: 0 20px;
+}
+
+
+#art_info {
+  width: 80%;
+  margin: 10 auto;
+  text-align: center;
+    color:#3b3b3b;
+  font-size:15px;
+  font-weight:bold;
+  font-style:normal;
+}
+#art_info a {
+    background: #fff;
+  background: rgba(255,255,255,0.70);
+  padding: 12px;
+  display: inline-block;
+  border-radius: 5px;
+
+}
+#art_info a:link {color:#000;}      
+#art_info a:hover {color:#888;} 
+
+#loading { 
+  margin: 0 auto;
+  text-align: center;
+    color:#3b3b3b;
+
+  }
+#loading p {
+     background: #fff;
+  background: rgba(255,255,255,0.70);
+  padding: 10px;
+  display: inline-block;
+  border-radius: 5px;
+}
+
+
+
+button {
+    border-radius: 10px;
+  text-indent:0;
+  border:1px solid #bdb7bd;
+  display:block;
+  text-align: center;
+  color:#3b3b3b;
+  font-size:15px;
+  font-weight:bold;
+  font-style:normal;
+  line-height:35px;
+ 
+  text-decoration:none;
+  text-align:center;
+  margin: 0 auto;
+  background-color: #FFF;
+}.button:hover {
+  background-color:#d4d0d4;
+}.button:active {
+  position:relative;
+  top:1px;
+}
+
+
+
