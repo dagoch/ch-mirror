@@ -11,27 +11,18 @@ function toHex(n) {
       + "0123456789ABCDEF".charAt(n%16);
 }
 
+function chObjsByColor(hexcolor) {
+	// show what color we're looking for (for debugging)
+	$("#color-swatch").html("Color: #"+hexcolor);
+	$("#color-swatch").css('background-color',hexcolor);
+	$("#color-swatch").show();
 
-$(function(){
-	$( '#example' ).photobooth().on( "image", function( event, dataUrl ){
-		$( "#gallery" ).show().html( '<img class="imgthf" src="' + dataUrl + '" >');
+		qryStr = "&color="+hexcolor;
+		chSearchObjs(qryStr);
+}
 
-//myImage = $("#imgthf");
-myImage = new Image(); 
-
-myImage.src = dataUrl;
-// image takes time to load; must not call colorthief before it is loaded!
-myImage.onload = function() { 
-//myImage.width = 470;  // not sure why these aren't set automatically
-//myImage.height = 300;
-	var domColor = colorThief.getColor(myImage);
-		console.log("dominant color = "+domColor);
-
-	// convert domColor to hex color string
-	hexcolor = rgbToHex(domColor[0],domColor[1],domColor[2]);
-	console.log("in hex: "+hexcolor);
-
-		// jquery ajax call to cooper hewitt museum api
+function chSearchObjs(qryStr) {
+			// jquery ajax call to cooper hewitt museum api
 	var token = 'ab2420224c8ad118c80f216fc888d045';  // sorry guys, should hide this server side somewhere, but this is quick-and-dirty
 
 	var CHapi = "https://api.collection.cooperhewitt.org/rest/";
@@ -40,8 +31,8 @@ myImage.onload = function() {
 
 
 	var url = CHapi + "?" + method + "&access_token=" + token;
-	url += "&has_images=1";  // Only get objects with images
-	url += "&color="+hexcolor;
+		url += "&has_images=1";  // Only get objects with images
+	url += qryStr;
 
 console.log("URL = "+url);
 
@@ -113,12 +104,53 @@ console.log("URL = "+url);
 
 		}
 	);
-		
-	
-
-
-
 }
+
+$(function(){
+	$( '#example' ).photobooth().on( "image", function( event, dataUrl ){
+		$( "#gallery" ).show().html( '<img src="' + dataUrl + '" >');
+
+	// now find colors from the camera image and use to retrieve objects from cooper hewitt
+	myImage = new Image(); 
+	myImage.src = dataUrl;
+	// image takes time to load; must not call colorthief before it is loaded!
+	myImage.onload = function() { 
+
+		var hexcolor = null;
+		var domcolor = null;
+		var palette = colorThief.getPalette(myImage, 6);  // get six colors from image
+		for (i=0; i<palette.length; i++) {
+			thisColor = palette[i];
+				// convert domColor to hex color string
+			hexcolor = rgbToHex(thisColor[0],thisColor[1],thisColor[2]);
+			console.log("in hex: "+hexcolor);
+			if (i==0) { // first color found is dominant color
+				domcolor = hexcolor;
+			}
+
+			// check if it's grey: if rgb are all within 16 of each other
+			if (Math.abs(thisColor[0]-thisColor[1]) < 16) {
+				if (Math.abs(thisColor[2]-thisColor[0]) < 16) {
+					if (Math.abs(thisColor[2]-thisColor[1]) > 16) {
+						break;  // this color is not grey, so we can use it
+					}
+				} else {
+					break;  // this color is not grey, so we can use it
+				}
+			} else {
+				break;  // this color is not grey, so we can use it
+			}
+		}
+		if (hexcolor) {
+			console.log("found non-grey color: "+hexcolor);
+		} else {
+			 // found no non-grey color, so just use the first one (the dominant color)
+			hexcolor = domcolor;
+			console.log("dom color in hex: "+hexcolor);
+		}
+
+		chObjsByColor(hexcolor);
+	}
 
 	});
 
