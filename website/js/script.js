@@ -1,5 +1,6 @@
+// script.js: where our appplication code lives
 
-		var colorThief = new ColorThief();
+var colorThief = new ColorThief();
 
 // for decimal to hex color conversion	
 function rgbToHex(R,G,B) {return toHex(R)+toHex(G)+toHex(B)}
@@ -64,6 +65,8 @@ console.log("URL = "+url);
 			}
 
 			if (numObjects>0) {  // we got results, let's pick one
+				objPicked = false;
+			  do {
 				var pick = Math.floor(Math.random()*numObjects);
 				console.log("Picking Object number "+pick);
 				var yourObject = resp.objects[pick];
@@ -85,8 +88,17 @@ console.log("URL = "+url);
 			//  Get the big one, and let the browser reduce it if need be.
 				var imageUrl = yourObject.images[0].b.url;
 				var imageHeight = yourObject.images[0].b.height;
-				$("#art").css('background-image', 'url(' + imageUrl + ')');
-				$("#art").css('height',imageHeight);   // show full height of the image
+				var imageWidth = yourObject.images[0].b.width;
+
+				// check if image is vertical within usual formats
+				if (imageHeight/imageWidth > 1.3 && imageHeight/imageWidth < 1.8) {
+					$("#art").css('background-image', 'url(' + imageUrl + ')');
+					$("#art").css('height',imageHeight);   // show full height of the image
+					$("#art").css('width',imageWidth);
+					objPicked = true;
+				}
+			  } while (!objPicked);  // TODO: THIS WILL LOOP FOREVER IF THERE ARE NO VERTICAL IMAGES IN RETURNED OBJECTS!
+
 
 
 	 		} else {
@@ -118,16 +130,23 @@ $(function(){
 
 		var hexcolor = null;
 		var domcolor = null;
-		var palette = colorThief.getPalette(myImage, 6);  // get six colors from image
+		var palette = colorThief.getPalette(myImage, 8);  // get six colors from image
+
+ 
+
 		for (i=0; i<palette.length; i++) {
 			thisColor = palette[i];
 				// convert domColor to hex color string
-			hexcolor = rgbToHex(thisColor[0],thisColor[1],thisColor[2]);
+			red = thisColor[0];
+			green = thisColor[1];
+			blue = thisColor[2];
+			hexcolor = rgbToHex(red,green,blue);
 			console.log("in hex: "+hexcolor);
 			if (i==0) { // first color found is dominant color
 				domcolor = hexcolor;
 			}
 
+		  if (0) {
 			// check if it's grey: if rgb are all within 16 of each other
 			if (Math.abs(thisColor[0]-thisColor[1]) < 16) {
 				if (Math.abs(thisColor[2]-thisColor[0]) < 16) {
@@ -140,8 +159,29 @@ $(function(){
 			} else {
 				break;  // this color is not grey, so we can use it
 			}
+		  } else {
+		  	// here, use HSB to find first bright color
+		  	// L (lightness) = (M + m) / 2, where M is max(R, G, B) and m is min(R, G, B)
+		  	maxC = Math.max(red,green,blue);
+		  	minC = Math.min(red,green,blue);
+		  	B = (maxC + minC)/2;
+		  	// S (saturation) = 0, if R = G = B, otherwise 255 * (M - m) / (M + m), if L < 128, otherwise 255 * (M - m) / (511 - (M + m))
+		  	S = 0;
+		  	if (red == green && red == blue) {
+		  		S = 0;
+		  	} else if (B<128) {
+		  		S = 255 * (maxC-minC)/(maxC+minC);
+		  	} else { // B>128
+		  		S= 255 * (maxC - minC) / (511 - (maxC + minC));
+		  	}
+		  	console.log("S = "+S+" and B = "+B);
+		  	if (S>32 && B>32 && B<224) {
+		  		console.log("choosing this color: "+hexcolor);
+		  		break;
+		  	}
+		  }
 		}
-		if (hexcolor) {
+		if (i<palette.length) {
 			console.log("found non-grey color: "+hexcolor);
 		} else {
 			 // found no non-grey color, so just use the first one (the dominant color)
