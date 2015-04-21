@@ -18,11 +18,14 @@
 </div>
 <canvas style="display:none;" width=640 height=480></canvas>
 
-<div id="art">
 
-	<div id="weather" style="display: none;"></div>
+		<div id="container">
+
+
 	<div id="art_info" style="display: none;"></div>
 	<div id="loading" style="display: none;"><p>Getting Art<br/> <img src="ajax-loader.gif"></p></div>
+	<div id="art">
+</div>
 </div>
 
 <script>
@@ -72,9 +75,10 @@ navigator.getUserMedia  = navigator.getUserMedia ||
 if (navigator.getUserMedia) {
   navigator.getUserMedia(
   	{	audio: true, 
-  	 	video: {  width: { min: 1024, ideal: 1280, max: 1920 },
-        			height: { min: 576, ideal: 720, max: 1080 }}}, 
-        function(stream) {
+  	 	video: true  //{  width: { min: 640, ideal: 1280, max: 1920 },
+        			   //    height: { min: 480, ideal: 720, max: 1080 }}
+     }, 
+    function(stream) {
     		video.src = window.URL.createObjectURL(stream);
         	localMediaStream = stream;
 
@@ -127,4 +131,5 @@ function updateAud() {
 // 	}
 // }
 </script>
+
 

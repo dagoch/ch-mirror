@@ -95,9 +95,11 @@ console.log("Calling getJson: "+(new Date()));
 
 				// check if image is vertical within usual formats
 				if (imageHeight/imageWidth > 1.3 && imageHeight/imageWidth < 1.8) {
-					$("#art").css('background-image', 'url(' + imageUrl + ')');
-					$("#art").css('height',imageHeight);   // show full height of the image
-					$("#art").css('width',imageWidth);
+					//var cont = $("#art").html();
+					$("#art").html('<img src="'+imageUrl+'">');
+					// $("#art").css('background-image', 'url(' + imageUrl + ')');
+					// $("#art").css('height',imageHeight);   // show full height of the image
+					// $("#art").css('width',imageWidth);
 					objPicked = true;
 				}
 			  } while (!objPicked);  // TODO: THIS WILL LOOP FOREVER IF THERE ARE NO VERTICAL IMAGES IN RETURNED OBJECTS!
