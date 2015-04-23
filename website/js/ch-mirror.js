@@ -96,10 +96,10 @@ console.log("Calling getJson: "+(new Date()));
 				// check if image is vertical within usual formats
 				if (imageHeight/imageWidth > 1.3 && imageHeight/imageWidth < 1.8) {
 					//var cont = $("#art").html();
-					$("#art").html('<img src="'+imageUrl+'">');
-					// $("#art").css('background-image', 'url(' + imageUrl + ')');
-					// $("#art").css('height',imageHeight);   // show full height of the image
-					// $("#art").css('width',imageWidth);
+					//$("#art").html('<img src="'+imageUrl+'">');
+					 $('#art').css('background-image', 'url(' + imageUrl + ')');
+					 $('#art').css('height',imageHeight);   // show full height of the image
+					 $('#art').css('width',imageWidth);
 					objPicked = true;
 				}
 			  } while (!objPicked);  // TODO: THIS WILL LOOP FOREVER IF THERE ARE NO VERTICAL IMAGES IN RETURNED OBJECTS!
@@ -117,7 +117,41 @@ console.log("Calling getJson: "+(new Date()));
 
 			$("#art_info").html(artInfo);
 			$("#art_info").show();
+
+			rippleCanvas = document.getElementById('ripple-canvas');
+artdiv = document.getElementById('art');
+console.log("got artdiv: "+artdiv);
+console.log("got ripplecanvas: "+rippleCanvas);
+
+			if (rippleCanvas != null) {
+				console.log("Found ripple canvas");
+							artdiv.removeChild(rippleCanvas);  // HOW TO CLEAR CANVAS WITHOUT REMOVING IT????
+							
+				// rippleContext = rippleCanvas.getContext('webgl') || rippleCanvas.getContext('experimental-webgl');
+				// if (rippleContext != null) {
+				// 	console.log("found context");
+				// 	console.log("clearing canvas width = "+rippleCanvas.width+" height="+rippleCanvas.height);
+				// 	//rippleContext.clearRect(0,0,rippleCanvas.width,rippleCanvas.height);
+				// 	rippleContext.clearColor(0.0,0.0,0.5,1.0);
+				// 	rippleContext.clear(rippleContext.COLOR_BUFFER_BIT);
+
+				// }
+			} else {}
+
+/*			if ($('#art').ripples != null) {
+				console.log("Found art ripples");
+				rippleCanvas = $('#art').ripples.canvas;
+				rippleContext = $('#art').ripples.context;
+				if (rippleContext != null) {
+					console.log("found context");
+					console.log("clearing canvas width = "+rippleCanvas.width+" height="+rippleCanvas.height);
+					rippleContext.clearRect(0,0,rippleCanvas.width,rippleCanvas.height);
+				}
+			}
+	*/		    
+	startRipples();
 			console.log("Done showing image: "+(new Date()));
+			
 
 
 		}

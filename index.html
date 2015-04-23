@@ -1,22 +1,26 @@
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-		<script type="text/javascript" src="website/js/jquery.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
+		<!--script type="text/javascript" src="website/js/jquery.js"></script-->
 			<script type="text/javascript" src="website/js/color-thief.js"></script>
 			<script type="text/javascript" src="website/js/quantize.js"></script>
+      <script src="website/js/jquery.ripples.js"></script>
 		<script type="text/javascript" src="website/js/ch-mirror.js"></script>
+
+
 		<link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
 
 		<title>CH-Mirror</title>
 	</head>
 	<body>
-	Clap your hands to retrieve an image from the Cooper Hewitt collection.<p/>
+	Demo: blow into the microphone to retrieve an image from the Cooper Hewitt collection.<p/>
 
 
 <div id="hiddencamera" style="display:none;">
-<video autoplay></video>
+<video autoplay muted></video>
 </div>
-<canvas style="display:none;" width=640 height=480></canvas>
+<canvas id="camera-canvas" style="display:none;" width=640 height=480></canvas>
 
 
 		<div id="container">
@@ -29,8 +33,28 @@
 </div>
 
 <script>
+var startRipples = function() {
+  console.log("Starting ripples!");
+$('#art').ripples({
+  resolution: 256,
+  dropRadius: 20,
+  perturbance: 0.04,
+});
+     //$('body').ripples("play");
+  // Automatic drops
+  setInterval(function() {
+    var $el = $('#art');
+    var x = Math.random() * $el.outerWidth();
+    var y = Math.random() * $el.outerHeight();
+    var dropRadius = 20;
+    var strength = 0.04 + Math.random() * 0.04;
+    
+    $el.ripples('drop', x, y, dropRadius, strength);
+  }, 400);
+};
+
 function hasGetUserMedia() {
-  return !!(navigator.getUserMedia || navigator.webkitGetUserMedia ||
+  return !!(navigator.webkitGetUserMedia || navigator.getUserMedia || 
             navigator.mozGetUserMedia || navigator.msGetUserMedia);
 }
 
@@ -45,7 +69,7 @@ if (hasGetUserMedia()) {
   };
 
     var video = document.querySelector('video');
-  var canvas = document.querySelector('canvas');
+  var canvas = document.getElementById('camera-canvas'); // document.querySelector('canvas');
   var ctx = canvas.getContext('2d');
   var localMediaStream = null;
 
@@ -100,36 +124,38 @@ if (navigator.getUserMedia) {
 audCtx = new (window.AudioContext || window.webkitAudioContext)();
 var analyser = audCtx.createAnalyser();
 analyser.fftSize = 2048;
+analyser.smoothingTimeConstant = 0.2;
+console.log(".smoothingTimeConstant = "+analyser.smoothingTimeConstant);
 var dataArray = new Uint8Array(analyser.frequencyBinCount); // developer.mozilla.org/en-US/docs/Web/API/AnalyserNode
-
+var lastAvgVol = 0;
 function updateAud() {
 	analyser.getByteFrequencyData(dataArray);
 	accum = 0;
+  cntbins = 0;
 	for (i=0; i<dataArray.length;i++) {
 		accum += dataArray[i];
+    if ((lastAvgVol > 0) && (dataArray[i]-lastAvgVol>20)) cntbins++; // count number of loud bins 
 	}
 	avg = accum/dataArray.length;
-	//console.log("Avg freq = "+avg);
-	if (avg>60) {
+  //console.log("Avg freq = "+avg+ " lastAvgVol = "+lastAvgVol+ " cntbins = "+cntbins);
+  lastAvgVol = avg;
+  
+	if (avg>60) { //(cntbins>300) { //  {
+
+
 		snapshot();   // if any power peaks over 50, take a snapshot!
-		localStorage["lastsnapshot"]= new Date().getTime(); // store current time in milliseconds
-		requestAnimationFrame(updateAud);
-//		setTimeout('startListening()', 10000); // after 30 seconds listen for sound again
+//		localStorage["lastsnapshot"]= new Date().getTime(); // store current time in milliseconds
+    setTimeout(keepListening, 5000);  // after 20 seconds, start listening for sound again
 	} else {	
 		requestAnimationFrame(updateAud);
 	}
 }
 
-// function startListening() {
-// 	var millis = new Date().getTime();
-// 	console.log("Start Listening: "+millis);
-// 	console.log("Localstorage: "+localStorage["lastsnapshot"]);
-// 	if (localStorage["lastsnapshot"]-millis>10000) {
-// 		requestAnimationFrame(updateAud);
-// 	} else {
-// 		setTimeout('startListening()',10000);
-// 	}
-// }
+function keepListening() {
+      requestAnimationFrame(updateAud);
+}
+
+
 </script>
 
 
