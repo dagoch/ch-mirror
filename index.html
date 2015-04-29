@@ -28,7 +28,7 @@
 
 	<div id="art_info" style="display: none;"></div>
 	<div id="loading" style="display: none;"><p>Getting Art<br/> <img src="ajax-loader.gif"></p></div>
-	<div id="art">
+	<div id="art" style="background-image: url('website/img/80944_172b6bc6286b145b_b.jpg'); height: 1024px; width: 718px;">
 </div>
 </div>
 
@@ -42,15 +42,15 @@ $('#art').ripples({
 });
      //$('body').ripples("play");
   // Automatic drops
-  setInterval(function() {
-    var $el = $('#art');
-    var x = Math.random() * $el.outerWidth();
-    var y = Math.random() * $el.outerHeight();
-    var dropRadius = 20;
-    var strength = 0.04 + Math.random() * 0.04;
+  // setInterval(function() {
+  //   var $el = $('#art');
+  //   var x = Math.random() * $el.outerWidth();
+  //   var y = Math.random() * $el.outerHeight();
+  //   var dropRadius = 20;
+  //   var strength = 0.04 + Math.random() * 0.04;
     
-    $el.ripples('drop', x, y, dropRadius, strength);
-  }, 400);
+  //   $el.ripples('drop', x, y, dropRadius, strength);
+  // }, 400);
 };
 
 function hasGetUserMedia() {
@@ -75,7 +75,7 @@ if (hasGetUserMedia()) {
 
   function snapshot() {
     if (localMediaStream) {
-    	console.log(video.videoWidth+" : "+video.videoHeight);
+    	//console.log(video.videoWidth+" : "+video.videoHeight);
       ctx.drawImage(video, 0, 0,video.videoWidth,video.videoHeight);
       // "image/webp" works in Chrome.
       // Other browsers will fall back to image/png.
@@ -140,12 +140,12 @@ function updateAud() {
   //console.log("Avg freq = "+avg+ " lastAvgVol = "+lastAvgVol+ " cntbins = "+cntbins);
   lastAvgVol = avg;
   
-	if (avg>60) { //(cntbins>300) { //  {
+	if (avg>50) { //(cntbins>300) { //  {
 
 
 		snapshot();   // if any power peaks over 50, take a snapshot!
 //		localStorage["lastsnapshot"]= new Date().getTime(); // store current time in milliseconds
-    setTimeout(keepListening, 5000);  // after 20 seconds, start listening for sound again
+    setTimeout(keepListening, 20000);  // after 20 seconds, start listening for sound again
 	} else {	
 		requestAnimationFrame(updateAud);
 	}
@@ -154,6 +154,13 @@ function updateAud() {
 function keepListening() {
       requestAnimationFrame(updateAud);
 }
+
+$(window).load(function() {
+
+    console.log("dom not only ready, but everything is loaded");
+    startRipples();
+});
+//window.onload = function() { startRipples(); }
 
 
 </script>

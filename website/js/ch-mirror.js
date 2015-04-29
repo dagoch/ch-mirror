@@ -59,6 +59,7 @@ console.log("Calling getJson: "+(new Date()));
 			// });
 
 			var artInfo = '';
+			var imageUrl = null;
 
 			var numObjects = resp.total;
 			ch_out += "<p>Found "+numObjects+" Objects</p>\n";
@@ -89,12 +90,50 @@ console.log("Calling getJson: "+(new Date()));
 			// For simplicity I'm assuming that images[0] is the primary image
 			//  All images seem to have b, n and z entries (full size, thumbnail, and in-between)
 			//  Get the big one, and let the browser reduce it if need be.
-				var imageUrl = yourObject.images[0].b.url;
+				imageUrl = yourObject.images[0].b.url;
 				var imageHeight = yourObject.images[0].b.height;
 				var imageWidth = yourObject.images[0].b.width;
 
 				// check if image is vertical within usual formats
 				if (imageHeight/imageWidth > 1.3 && imageHeight/imageWidth < 1.8) {
+
+								rippleCanvas = document.getElementById('ripple-canvas');
+artdiv = document.getElementById('art');
+console.log("got artdiv: "+artdiv);
+console.log("got ripplecanvas: "+rippleCanvas);
+
+			if (rippleCanvas != null) {
+				console.log("Found ripple canvas");
+				//			artdiv.removeChild(rippleCanvas);  // HOW TO CLEAR CANVAS WITHOUT REMOVING IT????
+							
+				// rippleContext = rippleCanvas.getContext('webgl') || rippleCanvas.getContext('experimental-webgl');
+				// if (rippleContext != null) {
+				// 	console.log("found context");
+				// 	console.log("clearing canvas width = "+rippleCanvas.width+" height="+rippleCanvas.height);
+				// 	//rippleContext.clearRect(0,0,rippleCanvas.width,rippleCanvas.height);
+				// 	rippleContext.clearColor(0.0,0.0,0.5,1.0);
+				// 	rippleContext.clear(rippleContext.COLOR_BUFFER_BIT);
+
+				// }
+			} else {}
+
+			if ($('#art').ripples != null) {
+
+				
+				var thisRipples = $('#art').ripples;
+				console.log("Found art ripples"+thisRipples);
+//				thisRipples("loadRippleImage",imageUrl);
+				$('#art').ripples("destroy");
+				// rippleCanvas = $('#art').ripples.canvas;
+				// rippleContext = $('#art').ripples.context;
+				// if (rippleContext != null) {
+				// 	console.log("found context");
+				// 	console.log("clearing canvas width = "+rippleCanvas.width+" height="+rippleCanvas.height);
+				// 	rippleContext.clearRect(0,0,rippleCanvas.width,rippleCanvas.height);
+				// }
+			}
+
+			
 					//var cont = $("#art").html();
 					//$("#art").html('<img src="'+imageUrl+'">');
 					 $('#art').css('background-image', 'url(' + imageUrl + ')');
@@ -118,37 +157,8 @@ console.log("Calling getJson: "+(new Date()));
 			$("#art_info").html(artInfo);
 			$("#art_info").show();
 
-			rippleCanvas = document.getElementById('ripple-canvas');
-artdiv = document.getElementById('art');
-console.log("got artdiv: "+artdiv);
-console.log("got ripplecanvas: "+rippleCanvas);
 
-			if (rippleCanvas != null) {
-				console.log("Found ripple canvas");
-							artdiv.removeChild(rippleCanvas);  // HOW TO CLEAR CANVAS WITHOUT REMOVING IT????
-							
-				// rippleContext = rippleCanvas.getContext('webgl') || rippleCanvas.getContext('experimental-webgl');
-				// if (rippleContext != null) {
-				// 	console.log("found context");
-				// 	console.log("clearing canvas width = "+rippleCanvas.width+" height="+rippleCanvas.height);
-				// 	//rippleContext.clearRect(0,0,rippleCanvas.width,rippleCanvas.height);
-				// 	rippleContext.clearColor(0.0,0.0,0.5,1.0);
-				// 	rippleContext.clear(rippleContext.COLOR_BUFFER_BIT);
-
-				// }
-			} else {}
-
-/*			if ($('#art').ripples != null) {
-				console.log("Found art ripples");
-				rippleCanvas = $('#art').ripples.canvas;
-				rippleContext = $('#art').ripples.context;
-				if (rippleContext != null) {
-					console.log("found context");
-					console.log("clearing canvas width = "+rippleCanvas.width+" height="+rippleCanvas.height);
-					rippleContext.clearRect(0,0,rippleCanvas.width,rippleCanvas.height);
-				}
-			}
-	*/		    
+		    
 	startRipples();
 			console.log("Done showing image: "+(new Date()));
 			
