@@ -14,10 +14,7 @@
 		<title>CH-Mirror</title>
 	</head>
 	<body>
-	Demo: blow into the microphone to retrieve an image from the Cooper Hewitt collection.<p/>
-
-
-<div id="hiddencamera" style="display:none;">
+	<div id="hiddencamera" style="display:none;">
 <video autoplay muted></video>
 </div>
 <canvas id="camera-canvas" style="display:none;" width=640 height=480></canvas>
@@ -26,9 +23,10 @@
 		<div id="container">
 
 
-	<div id="art_info" style="display: none;"></div>
+
 	<div id="loading" style="display: none;"><p>Getting Art<br/> <img src="ajax-loader.gif"></p></div>
 	<div id="art" style="background-image: url('website/img/80944_172b6bc6286b145b_b.jpg'); height: 1024px; width: 718px;">
+    <div id="art_info" style="display: block; vertical-align:bottom; margin-left: auto; margin-right:auto; color: #000000;">Testing</div>
 </div>
 </div>
 
@@ -53,6 +51,13 @@ $('#art').ripples({
   // }, 400);
 };
 
+function ripplesCenter() {
+  var $el = $('#art');
+  var ctrx = $el.outerWidth()/2;
+  var ctry = $el.outerHeight()/2;
+  $el.ripples('drop',ctrx,ctry,20,10);
+}
+
 function hasGetUserMedia() {
   return !!(navigator.webkitGetUserMedia || navigator.getUserMedia || 
             navigator.mozGetUserMedia || navigator.msGetUserMedia);
@@ -74,6 +79,7 @@ if (hasGetUserMedia()) {
   var localMediaStream = null;
 
   function snapshot() {
+    ripplesCenter();
     if (localMediaStream) {
     	//console.log(video.videoWidth+" : "+video.videoHeight);
       ctx.drawImage(video, 0, 0,video.videoWidth,video.videoHeight);
@@ -145,7 +151,7 @@ function updateAud() {
 
 		snapshot();   // if any power peaks over 50, take a snapshot!
 //		localStorage["lastsnapshot"]= new Date().getTime(); // store current time in milliseconds
-    setTimeout(keepListening, 20000);  // after 20 seconds, start listening for sound again
+    setTimeout(keepListening, 8000);  // after 20 seconds, start listening for sound again
 	} else {	
 		requestAnimationFrame(updateAud);
 	}

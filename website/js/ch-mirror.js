@@ -20,6 +20,7 @@ function chObjsByColor(hexcolor) {
 	$("#color-swatch").show();
 
 		qryStr = "&color="+hexcolor;
+		qryStr+= "&query=sail%20breeze%20blowing%20airy%20kite%20flying%20breezy"
 		chSearchObjs(qryStr);
 }
 
@@ -46,7 +47,7 @@ console.log("URL = "+url);
 	//$("#ch_output").show();
 	
 	// show 'loading' spinner
-	$("#loading").show();
+	//$("#loading").show();
 
 console.log("Calling getJson: "+(new Date()));
 	// Call the museum api
